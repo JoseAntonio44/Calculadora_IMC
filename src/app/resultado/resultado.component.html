@@ -1,0 +1,28 @@
+<!-- Mensaje del último cálculo -->
+<div *ngIf="resultado" class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md mb-4">
+  <h3 class="text-lg font-bold text-gray-800 mb-2">Resultado</h3>
+  <p class="text-center text-xl font-semibold"
+     [class.text-yellow-600]="resultado.imc < 18.5"
+     [class.text-green-600]="resultado.imc >= 18.5 && resultado.imc < 25"
+     [class.text-red-600]="resultado.imc >= 25">
+    {{ resultado.mensaje }}
+  </p>
+  <p class="text-center text-sm text-gray-500 mt-1">IMC: {{ resultado.imc }}</p>
+</div>
+
+<!-- Historial -->
+<div *ngIf="historial.length > 0" class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md">
+  <h3 class="text-lg font-bold text-gray-800 mb-3">Histórico</h3>
+  <ul class="space-y-2">
+    <li *ngFor="let item of historial"
+        class="flex justify-between items-center bg-gray-50 rounded-lg px-4 py-2">
+      <span class="font-medium"
+            [class.text-yellow-600]="item.imc < 18.5"
+            [class.text-green-600]="item.imc >= 18.5 && item.imc < 25"
+            [class.text-red-600]="item.imc >= 25">
+        {{ item.mensaje }}
+      </span>
+      <span class="text-sm text-gray-400">IMC: {{ item.imc }}</span>
+    </li>
+  </ul>
+</div>
