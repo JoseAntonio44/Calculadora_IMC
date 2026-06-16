@@ -11,6 +11,9 @@ import { ResultadoImc } from '../models/resultado-imc';
 })
 export class ResultadoComponent {
   // @Input — recibe datos del padre
-  @Input() resultado: ResultadoImc | null = null;
   @Input() historial: ResultadoImc[] = [];
+
+  get historialLabel(): string {
+    return this.historial.length === 1 ? '1 cálculo' : `${this.historial.length} cálculos`;
+  }
 }

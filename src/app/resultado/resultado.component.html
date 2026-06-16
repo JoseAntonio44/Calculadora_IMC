@@ -1,28 +1,19 @@
-<!-- Mensaje del último cálculo -->
-<div *ngIf="resultado" class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md mb-4">
-  <h3 class="text-lg font-bold text-gray-800 mb-2">Resultado</h3>
-  <p class="text-center text-xl font-semibold"
-     [class.text-yellow-600]="resultado.imc < 18.5"
-     [class.text-green-600]="resultado.imc >= 18.5 && resultado.imc < 25"
-     [class.text-red-600]="resultado.imc >= 25">
-    {{ resultado.mensaje }}
-  </p>
-  <p class="text-center text-sm text-gray-500 mt-1">IMC: {{ resultado.imc }}</p>
-</div>
-
-<!-- Historial -->
-<div *ngIf="historial.length > 0" class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md">
-  <h3 class="text-lg font-bold text-gray-800 mb-3">Histórico</h3>
-  <ul class="space-y-2">
-    <li *ngFor="let item of historial"
-        class="flex justify-between items-center bg-gray-50 rounded-lg px-4 py-2">
-      <span class="font-medium"
-            [class.text-yellow-600]="item.imc < 18.5"
-            [class.text-green-600]="item.imc >= 18.5 && item.imc < 25"
-            [class.text-red-600]="item.imc >= 25">
+<!-- Histórico -->
+<section *ngIf="historial.length > 0" class="bg-white rounded-3xl border border-gray-100 shadow-lg p-8">
+  <div class="flex items-baseline justify-between mb-4">
+    <h2 class="text-lg font-bold tracking-tight">Histórico</h2>
+    <span class="text-xs font-semibold text-gray-400">{{ historialLabel }}</span>
+  </div>
+  <div class="flex flex-col">
+    <div *ngFor="let item of historial" class="flex items-center justify-between gap-4 py-3.5 border-t border-gray-100">
+      <span
+        class="text-sm font-semibold leading-snug"
+        [class.text-amber-600]="item.categoria === 'bajo'"
+        [class.text-green-600]="item.categoria === 'ideal'"
+        [class.text-red-600]="item.categoria === 'alto'">
         {{ item.mensaje }}
       </span>
-      <span class="text-sm text-gray-400">IMC: {{ item.imc }}</span>
-    </li>
-  </ul>
-</div>
+      <span class="flex-none text-xs font-bold text-gray-500 bg-gray-50 px-3 py-1 rounded-full">IMC: {{ item.imc }}</span>
+    </div>
+  </div>
+</section>

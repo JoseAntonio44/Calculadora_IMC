@@ -1,16 +1,21 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ResultadoImc } from '../models/resultado-imc';
+import { CategoriaImc, ResultadoImc } from '../models/resultado-imc';
+import { ToastService } from '../services/toast.service';
 
 @Component({
   selector: 'app-formulario',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './formulario.component.html',
   styleUrls: ['./formulario.component.css']
 })
 export class FormularioComponent {
+  private toastService = inject(ToastService);
+
   nombre: string = '';
+  nombreInvalido = false;
   sexo: string = 'hombre';
   peso: number = 70;
   altura: number = 170;
@@ -36,34 +41,43 @@ export class FormularioComponent {
 
   borrar(): void {
     this.nombre = '';
+    this.nombreInvalido = false;
     this.sexo = 'hombre';
     this.peso = 70;
     this.altura = 170;
+    this.toastService.show('Formulario restablecido', 'success');
+  }
+
+  private clasificar(imc: number): { categoria: CategoriaImc; frag: string } {
+    if (imc < 18.5) return { categoria: 'bajo', frag: 'por debajo de su peso ideal' };
+    if (imc < 25) return { categoria: 'ideal', frag: 'en su peso ideal' };
+    return { categoria: 'alto', frag: 'por encima de su peso ideal' };
   }
 
   calcular(): void {
+    const nombre = this.nombre.trim();
+    if (!nombre) {
+      this.nombreInvalido = true;
+      this.toastService.show('El nombre es obligatorio', 'error');
+      return;
+    }
+    this.nombreInvalido = false;
+
     // Fórmula IMC: peso / (altura en metros)^2
     const alturaMetros = this.altura / 100;
     const imc = this.peso / (alturaMetros * alturaMetros);
-    const imcRedondeado = Math.round(imc * 100) / 100;
-
-    let mensaje = '';
-    if (imc < 18.5) {
-      mensaje = this.nombre + ' está por debajo de su peso ideal';
-    } else if (imc < 25) {
-      mensaje = this.nombre + ' está en su peso ideal';
-    } else {
-      mensaje = this.nombre + ' está por encima de su peso ideal';
-    }
+    const { categoria, frag } = this.clasificar(imc);
+    const mensaje = `${nombre} está ${frag}`;
 
     // Emitimos el resultado al componente padre
     this.calcularIMC.emit({
-      nombre: this.nombre,
+      nombre,
       sexo: this.sexo,
       peso: this.peso,
       altura: this.altura,
-      imc: imcRedondeado,
-      mensaje: mensaje
+      imc: imc.toFixed(2),
+      mensaje,
+      categoria
     });
   }
 }

@@ -1,0 +1,17 @@
+<div class="fixed top-5 right-5 z-[60] flex flex-col gap-3 w-full max-w-xs">
+  <div
+    *ngFor="let toast of toastService.toasts()"
+    class="flex items-center justify-between gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-white shadow-lg"
+    [ngClass]="toast.type === 'success'
+      ? ['bg-green-600', 'shadow-green-600/50']
+      : ['bg-red-600', 'shadow-red-600/50']">
+    <span>{{ toast.message }}</span>
+    <button
+      type="button"
+      (click)="toastService.dismiss(toast.id)"
+      aria-label="Cerrar"
+      class="text-white/80 hover:text-white">
+      ✕
+    </button>
+  </div>
+</div>
